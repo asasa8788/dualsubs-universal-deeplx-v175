@@ -29,6 +29,9 @@
 	"scripts": {
 		"serve": "webpack serve",
 		"build": "rspack build",
+		"build:translate-deeplx": "node scripts/build-translate-deeplx.mjs",
+		"build:release": "npm run build:translate-deeplx && node scripts/build-release-assets.mjs",
+		"test:deeplx": "node test/translate-deeplx.stash-contract.mjs",
 		"build:dev": "rspack build -c rspack.dev.config.js --mode=development",
 		"build:args": "arguments-builder build",
 		"dts": "arguments-builder dts",
@@ -45,8 +48,8 @@
 		"node-polyfill-webpack-plugin": "^4.1.0"
 	},
 	"dependencies": {
-		"@nsnanocat/url": "^1.2.5",
-		"@nsnanocat/util": "^1.8.10",
+		"@nsnanocat/url": "https://codeload.github.com/NSNanoCat/URL/tar.gz/refs/tags/v1.2.5",
+		"@nsnanocat/util": "https://codeload.github.com/NSNanoCat/util/tar.gz/refs/tags/v1.8.10",
 		"@protobuf-ts/runtime": "^2.11.1",
 		"crypto-js": "^4.2.0",
 		"text-encoding": "^0.7.0"

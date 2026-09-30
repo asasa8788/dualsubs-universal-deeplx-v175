@@ -394,6 +394,40 @@ export default class Translate {
 			.catch(error => Promise.reject(error));
 	}
 
+	async DeepLX(text = [], source = this.Source, target = this.Target, api = this.API) {
+		text = Array.isArray(text) ? text : [text];
+		source = this.#LanguagesCode.DeepL[source] ?? this.#LanguagesCode.DeepL[source?.split?.(/[-_]/)?.[0]] ?? source.toLowerCase();
+		target = this.#LanguagesCode.DeepL[target] ?? this.#LanguagesCode.DeepL[target?.split?.(/[-_]/)?.[0]] ?? target.toLowerCase();
+		const endpoint = api?.Endpoint?.trim();
+		if (!endpoint) throw new Error("DeepLX endpoint is required");
+
+		const request = {
+			url: endpoint,
+			headers: {
+				Accept: "*/*",
+				"User-Agent": "DualSubs",
+				"Content-Type": "application/json",
+			},
+			body: JSON.stringify({
+				text: text.join("||"),
+				source_lang: source,
+				target_lang: target,
+			}),
+		};
+		const auth = api?.Token ?? api?.Auth;
+		if (auth) request.headers.Authorization = `Bearer ${auth}`;
+
+		return await fetch(request)
+			.then(response => {
+				const body = JSON.parse(response.body);
+				if (body?.code !== 200 || typeof body?.data !== "string") {
+					throw new Error(`DeepLX returned code ${body?.code ?? "invalid"}`);
+				}
+				return body.data.split("||");
+			})
+			.catch(error => Promise.reject(error));
+	}
+
 	async BaiduFanyi(text = [], source = this.Source, target = this.Target, api = this.API) {
 		text = Array.isArray(text) ? text : [text];
 		source = this.#LanguagesCode.Baidu[source] ?? this.#LanguagesCode.Baidu[source?.split?.(/[-_]/)?.[0]] ?? source.toLowerCase();
