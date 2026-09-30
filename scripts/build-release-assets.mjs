@@ -1,7 +1,7 @@
 import { cp, mkdir, readFile, writeFile } from "node:fs/promises";
 
 const tag = process.env.RELEASE_TAG ?? "v1.7.5-deeplx.1";
-const repository = "asasa8788/DualSubs-Universal-DeepLX";
+const repository = "asasa8788/dualsubs-universal-deeplx-v175";
 const baseUrl = `https://github.com/${repository}/releases/download/${tag}`;
 const output = "release-assets";
 
