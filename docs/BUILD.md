@@ -13,7 +13,9 @@ npm run test:deeplx
 1. Verifies `vendor/Translate.response.v1.7.5.bundle.js` against the official
    Universal v1.7.5 SHA-256.
 2. Inserts the restored `DeepLX()` method at an exact, validated class-method
-   boundary.
+   boundary. The method preserves the historical `||` batch protocol while
+   splitting a batch at 1800 Unicode characters to avoid anonymous-upstream
+   HTTP `413` errors.
 3. Copies official Universal v1.7.5 and YouTube v1.5.11 bundles unchanged.
 4. Rewrites only `script-providers.url` values in the two official complete
    `.stoverride` inputs to target this fork's release.

@@ -91,14 +91,14 @@ http:
 
 script-providers:
   🍿️ DualSubs.YouTube.request:
-    url: https://github.com/asasa8788/dualsubs-universal-deeplx-v175/releases/download/v1.7.5-deeplx.1/request.bundle.js
+    url: https://github.com/asasa8788/dualsubs-universal-deeplx-v175/releases/download/v1.7.5-deeplx.2/request.bundle.js
     interval: 86400
   🍿️ DualSubs.YouTube.response:
-    url: https://github.com/asasa8788/dualsubs-universal-deeplx-v175/releases/download/v1.7.5-deeplx.1/response.bundle.js
+    url: https://github.com/asasa8788/dualsubs-universal-deeplx-v175/releases/download/v1.7.5-deeplx.2/response.bundle.js
     interval: 86400
   🍿️ DualSubs.YouTube.Composite.TimedText.response:
-    url: https://github.com/asasa8788/dualsubs-universal-deeplx-v175/releases/download/v1.7.5-deeplx.1/Composite.Subtitles.response.bundle.js
+    url: https://github.com/asasa8788/dualsubs-universal-deeplx-v175/releases/download/v1.7.5-deeplx.2/Composite.Subtitles.response.bundle.js
     interval: 86400
   🍿️ DualSubs.YouTube.Translate.TimedText.response:
-    url: https://github.com/asasa8788/dualsubs-universal-deeplx-v175/releases/download/v1.7.5-deeplx.1/Translate.response.bundle.js
+    url: https://github.com/asasa8788/dualsubs-universal-deeplx-v175/releases/download/v1.7.5-deeplx.2/Translate.response.bundle.js
     interval: 86400

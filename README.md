@@ -58,6 +58,12 @@ It accepts the classic response:
 }
 ```
 
+Before sending a request, the vendor splits a 20-line translator batch into
+sub-batches of at most 1800 Unicode characters. This stays below the current
+DeepLX anonymous upstream limit and prevents intermittent HTTP `413` errors on
+long subtitle batches.
+
+
 ## Build
 
 ```sh

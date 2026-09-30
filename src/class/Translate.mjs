@@ -1,6 +1,31 @@
 import { Console, fetch } from "@nsnanocat/util";
 import MD5 from "crypto-js/md5.js";
 
+const DEEPLX_MAX_TEXT_LENGTH = 1800;
+
+function splitDeepLXText(text) {
+	const batches = [];
+	let batch = [];
+	let length = 0;
+	for (const item of text) {
+		const itemLength = [...item].length;
+		if (itemLength > DEEPLX_MAX_TEXT_LENGTH) {
+			throw new Error(`DeepLX subtitle segment exceeds ${DEEPLX_MAX_TEXT_LENGTH} characters`);
+		}
+		const separatorLength = batch.length ? 2 : 0;
+		if (batch.length && length + separatorLength + itemLength > DEEPLX_MAX_TEXT_LENGTH) {
+			batches.push(batch);
+			batch = [item];
+			length = itemLength;
+			continue;
+		}
+		batch.push(item);
+		length += separatorLength + itemLength;
+	}
+	if (batch.length) batches.push(batch);
+	return batches;
+}
+
 export default class Translate {
 	constructor(options = {}) {
 		this.Name = "Translate";
@@ -401,31 +426,35 @@ export default class Translate {
 		const endpoint = api?.Endpoint?.trim();
 		if (!endpoint) throw new Error("DeepLX endpoint is required");
 
-		const request = {
-			url: endpoint,
-			headers: {
-				Accept: "*/*",
-				"User-Agent": "DualSubs",
-				"Content-Type": "application/json",
-			},
-			body: JSON.stringify({
-				text: text.join("||"),
-				source_lang: source,
-				target_lang: target,
-			}),
-		};
-		const auth = api?.Token ?? api?.Auth;
-		if (auth) request.headers.Authorization = `Bearer ${auth}`;
+		return await Promise.all(
+			splitDeepLXText(text).map(async batch => {
+				const request = {
+					url: endpoint,
+					headers: {
+						Accept: "*/*",
+						"User-Agent": "DualSubs",
+						"Content-Type": "application/json",
+					},
+					body: JSON.stringify({
+						text: batch.join("||"),
+						source_lang: source,
+						target_lang: target,
+					}),
+				};
+				const auth = api?.Token ?? api?.Auth;
+				if (auth) request.headers.Authorization = `Bearer ${auth}`;
 
-		return await fetch(request)
-			.then(response => {
-				const body = JSON.parse(response.body);
-				if (body?.code !== 200 || typeof body?.data !== "string") {
-					throw new Error(`DeepLX returned code ${body?.code ?? "invalid"}`);
-				}
-				return body.data.split("||");
-			})
-			.catch(error => Promise.reject(error));
+				return await fetch(request)
+					.then(response => {
+						const body = JSON.parse(response.body);
+						if (body?.code !== 200 || typeof body?.data !== "string") {
+							throw new Error(`DeepLX returned code ${body?.code ?? "invalid"}`);
+						}
+						return body.data.split("||");
+					})
+					.catch(error => Promise.reject(error));
+			}),
+		).then(batches => batches.flat());
 	}
 
 	async BaiduFanyi(text = [], source = this.Source, target = this.Target, api = this.API) {
